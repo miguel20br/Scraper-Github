@@ -1,0 +1,48 @@
+import requests
+from bs4 import BeautifulSoup
+import csv
+
+# Coletar a página 
+page = requests.get('https://github.com/trending')
+#print(page)
+
+# Criar um objeto BeautifulSoup
+soup = BeautifulSoup(page.text, 'html.parser')
+#print(soup)
+
+# Pegar a repo list
+repo = soup.find(class_='explore-pjax-container container-lg p-responsive pt-6')
+#print(repo)
+
+# Achar todos os repositórios (tem que dar 25)
+repo_list = repo.find_all(<article class="Box-row">)
+
+# Abrir o "escritor" com nome
+file_name = 'github_trending_today.csv'
+
+# definir newline como '' para que novas linhas sejam anexadas sem pular nenhuma
+f = csv.writer(open(file_name, 'w', newline=''))
+
+# escrever uma nova linha como um cabeçalho
+f.writerow(['Developer', 'Repo Name', 'Number of Stars'])
+for repo in repo_list:
+
+# encontrar a primeira tag <a> e obter o texto, dps dividir o texto usando '/' pra conseguir o nome do desenvolvedor e o nome do repositório
+    full_repo_name = repo.find('h1').find('a').text.split('/')
+
+# extrair o nome do desenvolvedor no index 0
+developer = full_repo_name[0].strip()
+
+# extrair o nome do repositório no index 1
+repo_name = full_repo_name[1].strip()
+
+# encontrar a primeira ocorrência da classe octicon octicon-star e obtenha o texto (que é o número de estrelas)
+stars = repo.find(class_='octicon octicon-star').parent.parent.text.strip()
+
+# strip() all para remover espaços em branco à esquerda e à direita
+print('developer', developer)
+print('name', repo_name)
+print('stars', stars)
+
+# adicione as informações como uma linha na tabela csv
+f.writerow([developer, repo_name, stars])
