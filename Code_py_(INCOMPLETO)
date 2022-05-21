@@ -15,7 +15,7 @@ repo = soup.find(class_='explore-pjax-container container-lg p-responsive pt-6')
 #print(repo)
 
 # Achar todos os repositórios (tem que dar 25)
-repo_list = repo.find_all(<article class="Box-row">)
+repo_list = repo.find_all(<h1 class="h1">Trending</h1>)
 
 # Abrir o "escritor" com nome
 file_name = 'github_trending_today.csv'
@@ -39,7 +39,7 @@ repo_name = full_repo_name[1].strip()
 # encontrar a primeira ocorrência da classe octicon octicon-star e obtenha o texto (que é o número de estrelas)
 stars = repo.find(class_='octicon octicon-star').parent.parent.text.strip()
 
-# strip() all para remover espaços em branco à esquerda e à direita
+# printar geral
 print('developer', developer)
 print('name', repo_name)
 print('stars', stars)
